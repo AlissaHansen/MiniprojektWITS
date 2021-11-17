@@ -1,0 +1,246 @@
+/*Importerer Google font */
+@import url('https://fonts.googleapis.com/css2?family=Cookie&family=Courgette&family=Merriweather:wght@900&family=Righteous&display=swap');
+body {
+    background-image: url("image/layered-waves-haikei.svg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;     
+}
+
+.nav-header {
+    background-color: #4A4E69;
+}
+
+.main-nav {
+    text-align: center;
+    font-size: 1.8em;
+    font-weight: lighter;
+}
+
+.main-nav ul {
+    margin: 0;
+}
+
+.main-nav ul li {
+    display: inline;
+    padding: 0 5%;
+}
+
+.main-nav ul li a {
+    display: inline-block;
+    padding: .5em;
+    color: white;
+    text-decoration: none;
+    font-family: Righteous;
+    text-shadow: 2px 2px 4px #9A8C98;
+    text-transform: uppercase; 
+}
+.main-nav a:hover {
+    text-decoration: underline;
+    color: #eee;
+}
+
+.headline-content {
+    font-family: Merriweather;
+    font-size: 3.5em;
+    color: #F2E9E4;
+    text-align: center;
+    padding-top: 2%;
+    border-bottom: solid 1px;
+    width: 50%;
+    margin: auto; 
+}
+.span-title {
+    font-family: Righteous;
+    color: #F2E9E4;
+    font-size: 1em;
+}
+
+.section-header {
+    color: #C9ADA7;
+    font-size: 3em;
+    margin-top: 3.5%;
+    text-decoration: underline;
+    text-align: center;
+    font-family: Cookie;
+}
+
+.post-container {
+    margin: 5% auto;
+    width: 65%;
+}
+
+.post-outer-div {
+    margin: auto; 
+    width: 65%;
+    background-color:#505050;
+    border-style: solid;
+    border-width: 5px;
+    border-radius: 5px;
+    border-color:#C09CD9;
+}
+address {
+    margin-top: 1%;
+    margin-left: 1%;
+
+}
+
+.author {
+    color: white;  
+}
+
+.author-name {
+    float: right;
+    font-style: italic;
+    font-weight: normal;
+}
+
+.author a {
+    color: white;
+    font-style: italic;
+    
+}
+.author a:hover {
+    color: #999;
+}
+
+.author::before {
+    content: "- ";
+}
+
+article {
+    margin: 1% 1% 0 1%;
+    color: white;
+}
+
+.image-container {
+    display: flex;
+    padding: 3% 0; 
+    justify-content: space-evenly;
+}
+
+.comment-headline {
+    font-size: 2em;
+    font-family: Righteous;
+    font-style: oblique;
+    text-decoration: underline;
+    text-align: center;
+    color: #F2E9E4;
+    padding-top: 3%;
+}
+
+.comment-section {
+    background-color:#555;
+    margin: 0 auto 1% auto;
+    border-style: solid;
+    border-width: 5px;
+    border-radius: 5px;
+    border-color: #F2E9E4;
+    width: 50%;
+}
+
+.comment {
+    color: white;
+    margin: 1%;
+    border-bottom: 1.3px solid #999;
+
+}
+.comment a {
+    color:#C09CD9;
+    font-weight: bold;
+}
+.comment a:hover  {
+    color:white;
+}
+.modal-button {
+    margin-top: 1%;
+}
+.edit-post-modal {
+    float: right;
+}
+
+.info-paragraph {
+    color: white;
+    text-align: center;
+    padding: 2%;
+    font-size: 1.5em;
+    font-style: italic;
+}
+.info-paragraph a {
+    color: #C09CD9;
+}
+.info-paragraph a:hover {
+    color: powderblue;
+}
+
+.login-div {
+    background-color: white;
+    margin: 100px auto 0 auto;
+    height: 40%;
+    width: 20%;
+    padding: 20px;
+    border-radius: 3%;
+}
+
+.login-header {
+    text-align: center;
+    font-weight: bolder;
+}
+
+.brugernavn-farve {
+    color: #C9ADA7;
+    text-decoration: underline;
+}
+
+.login-knap {
+    padding-top: 20px;
+}
+
+.opret-bruger {
+    padding-top: 50px;
+    text-align: center;
+}
+
+.btn-primary { /* Overskriver bootstrap klasser for ikke at bruge Sass */
+    background-color: #22223B;
+    border-color: #22223B;
+}
+
+.btn-primary:hover { /* Overskriver bootstrap klasser for ikke at bruge Sass */
+    background-color: #4A4E69;
+    border-color: #4A4E69;
+}
+
+.card-header { /* Overskriver bootsrap card-header */
+    font-weight: bolder;
+}
+
+.post-title {
+    font-weight: bold;
+    color: #7393B3;
+}
+
+
+.list-group-item { /* Ovskriver bootsrap card indhold */ 
+    font-style: italic;
+}
+
+.main-header {
+    color: white;
+    text-align: center;
+    font-family: Merriweather ; /*Importeret font */
+    padding-top: 3%;
+    font-size: 1.5em;
+}
+
+.logud-knap {
+    text-align: center;
+    margin-top: 5%;
+    
+}
+
+.ErrorMessage{
+    color:red;
+    font-style: italic;
+    padding-top: 30px;
+}
