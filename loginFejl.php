@@ -1,6 +1,9 @@
 <?php 
 session_start();
 require_once '/home/mir/lib/db.php'; 
+if (!empty($_SESSION['user'])) {
+    header('Location: index.php');
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">

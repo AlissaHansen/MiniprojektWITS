@@ -13,16 +13,17 @@ require_once '/home/mir/lib/db.php';
     <title>Alexsa Forum</title>
 </head>
 <body>
+    <!-- Navigation bar -->
     <header class="nav-header">
         <nav class="main-nav">
             <ul>
                 <li><a href="index.php">Hjem</a></li>
                 <li><a href="alleIndlæg.php">Alle indlæg</a></li>
                 <?php
-                if (!empty($_SESSION['user'])) {
+                if (!empty($_SESSION['user'])) { //tjekker at brugeren er logget ind, og viser så knapper
                     echo "<li><a href='minSide.php'>Min side</a></li>";
                     echo "<li><a href='logud.php'>Log ud</a></li>";
-                } else {
+                } else { //hvis brugeren ikke er logget ind vises disse knapper i stedet
                     echo "<li><a href='login.php'>Login</a></li>";
                     echo "<li><a href='register.php'>Opret bruger</a></li>";
                 }
@@ -34,29 +35,83 @@ require_once '/home/mir/lib/db.php';
     <h1 class="headline-content">« Alexsa Forum »</h1>
     <div class=section-div>
         <h2 class="section-header">Seneste indlæg</h2>
-        
     </div>
+
+<?php    
+    // Button to Open the Modal, hvis man er logget ind. 
+    if (!empty ($_SESSION['user'])) {
+        echo "<button type='button' class='btn btn-secondary mx-auto mt-5 d-block' data-bs-toggle='modal' data-bs-target='#createPostModal'>";
+        echo 'Opret indlæg';
+        echo "</button>";
+    } else {
+        echo "<p class='info-paragraph'>For at oprette et indlæg, skal du være <a href='login.php'>logget ind.</a></p>";
+    }
+
+   // Pop-up Modal: Opret et indlæg i en form:
+   echo "<div class='modal fade' id='createPostModal' tabindex='-1' aria-labelledby='exampleModalLabel' aria-hidden='true'>";
+   echo "<div class='modal-dialog'>";
+   echo "<div class='modal-content'>";
+       echo "<div class='modal-header'>";
+           echo "<h5 class='modal-title' id='exampleModalLabel'>Opret indlæg</h5>";
+           echo "<button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>";
+       echo "</div>";
+       echo "<div class='modal-body'>";
+           echo "<form action='' method='post' enctype='multipart/form-data'>";
+           echo "<div class='mb-3'>";
+                   echo "<label for='title' class='form-label'>Titel</label>";
+                   echo "<input type='text' class='form-control' id='title' name='title' placeholder='Skriv en titel'/>";
+               echo "</div>";
+               echo "<div class='mb-3'>";
+                echo "<label for='content' class='form-label'>Indhold</label>";
+                   echo "<textarea id='content' name='content' rows='5' cols='45' placeholder='Skriv indhold her'>";
+                   echo "</textarea>";
+               echo "</div>";
+               echo "<div class='mb-3'>";
+                    echo "<input type ='file' name = 'picture' id = 'picture'>";
+               echo "</div>";
+               echo "<div class='modal-footer d-block'>";
+                   echo "<button type='submit' name='submitPost' class='btn btn-dark float-end'>Opret</button>";
+               echo "</div>";
+           echo "</form>";
+       echo "</div>";
+   echo "</div>";
+   echo "</div>";
+   echo "</div>";
+
+   //Når brugeren trykker på submit knap i modal
+    if (isset($_POST['submitPost'])) {
+        $addedPID = add_post ($_SESSION['user'], $_POST['title'], $_POST['content']); //tilføj indlæg
+        header("Refresh:0"); //refresher siden så indlægget er opdateret
+        if (!empty($_FILES['picture'])) { //tjekker om der er tilføje et billede
+            //tjekker filtype, og tilføjer extension
+            if($_FILES['picture']['type'] == "image/png") $type = ".png"; 
+            if ($_FILES['picture']['type'] == "image/jpeg") $type = ".jpg";
+            if ($_FILES['picture']['type'] == "image/gif") $type = ".gif";
+
+            $iid = add_image($_FILES['picture']['tmp_name'], $type); // Gemmer ID for billedet
+            add_attachment($addedPID, $iid);  //tilføjer billedet
+        }
+            }
     
+            //Display de 20 seneste indlæg:
 
-
-<?php
     $allPIDS = get_pids(); //Array af alle post ids.
     end($allPIDS); //Sætter pointer på sidste element.
 
     
-    for ($x = 0; $x <= 20; $x++) {
+    for ($x = 0; $x < 20; $x++) { //looper gennem 20 indlæg
         $currentPost = get_post(current($allPIDS));
-        $currentAuthor = htmlspecialchars($currentPost['uid']);
+        $date = $currentPost['date'];
+        $currentAuthor = htmlspecialchars($currentPost['uid']); //specialchars fjerner html injection
         $postID = $currentPost['pid'];
         $postURL = 'indlæg.php?pid='.$postID;
         echo "<div class='post-container'>";
-        echo "<div class='card' style='width: 18 rem;''>";
+        echo "<div class='card' style='width: 18 rem;''>"; //bootstrap card
             echo "<div class='card-header'>";
                 echo "<span class='post-title'>Titel: </span>";
                 echo htmlspecialchars (($currentPost['title']));
-                echo "<span class='author-name'>af: "; 
-                echo $currentAuthor; 
-                echo "</span>";
+                echo "<span class='author-name'>af: $currentAuthor</span>";
+                echo "<span class='author-name'>$date</span>";
 
             echo "</div>";
                 echo "<ul class='list-group list-group-flush'>";
@@ -67,7 +122,7 @@ require_once '/home/mir/lib/db.php';
                 echo "<a href='$postURL' class='stretched-link'></a>";
         echo "</div>";
         echo "</div>";
-        prev($allPIDS);
+        prev($allPIDS); // Sætter pointer én gang til venstre. 
     }
 ?>
 

@@ -1,5 +1,8 @@
 <?php
 session_start(); // Starter session. 
+if (!empty($_SESSION['user'])) {
+    header('Location: index.php');
+}
 ?>
 
 <!DOCTYPE html>

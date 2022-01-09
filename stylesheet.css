@@ -41,7 +41,7 @@ body {
 }
 
 .headline-content {
-    font-family: Merriweather;
+    font-family: Righteous;
     font-size: 3.5em;
     color: #F2E9E4;
     text-align: center;
@@ -93,6 +93,7 @@ address {
     float: right;
     font-style: italic;
     font-weight: normal;
+    padding-left: 1%;
 }
 
 .author a {
@@ -152,18 +153,20 @@ article {
 .comment a:hover  {
     color:white;
 }
-.modal-button {
+
+.modal-div {
+    display: flex;
+    justify-content:space-evenly;
     margin-top: 1%;
 }
-.edit-post-modal {
+.dl-comment-button {
     float: right;
 }
-
 .info-paragraph {
     color: white;
     text-align: center;
     padding: 2%;
-    font-size: 1.5em;
+    font-size: 1em;
     font-style: italic;
 }
 .info-paragraph a {
@@ -228,9 +231,9 @@ article {
 .main-header {
     color: white;
     text-align: center;
-    font-family: Merriweather ; /*Importeret font */
+    font-family: Cookie; /*Importeret font */
     padding-top: 3%;
-    font-size: 1.5em;
+    font-size: 2.2em;
 }
 
 .logud-knap {

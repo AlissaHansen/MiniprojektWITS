@@ -12,7 +12,8 @@ require_once '/home/mir/lib/db.php';
     <title>Indlæg</title>
 </head>
 <body>
-<header class="nav-header">
+    <!--NavBar-->
+<header class="nav-header"> 
         <nav class="main-nav">
             <ul>
                 <li><a href="index.php">Hjem</a></li>
@@ -30,24 +31,24 @@ require_once '/home/mir/lib/db.php';
         </nav>
     </header>
 
-    <?php
+    <?php // Tjekker om det er sat et postID
         if (empty($_GET['pid'])){
             echo "Fejl: pid er ikke sat";
             exit;
         }
-
+        // Tjekker om det et tal. 
         if (!is_numeric($_GET['pid'])){
             echo "Fejl: pid skal være et tal";
             exit;
         }
 
-        $pidInput = $_GET['pid'];
+        $pidInput = $_GET['pid']; // Gemmer pid. 
         $post = get_post($pidInput);
         $titel = htmlspecialchars($post['title']);
         
 
-        $userID = htmlspecialchars($post['uid']);
-        $url = 'titler.php?uid='. $userID; 
+        $userID = htmlspecialchars($post['uid']); // Fjerner mulighed for HTML injection.
+        $url = 'userSide.php?uid='. $userID; // URL til en brugers side.
         $indhold = htmlspecialchars($post['content']);
 
         echo "<h2 class= 'section-header'>";
@@ -60,29 +61,45 @@ require_once '/home/mir/lib/db.php';
     // Henter og viser billeder, hvis de findes til et indlæg. 
         $imageID = get_iids_by_pid($pidInput); 
         if (!empty($imageID)) {
-            echo "<div class='image-container'>";
+            echo "<div class='image-container'>"; 
             foreach ($imageID as $iid) {
                 $imageINFO = get_image($iid);
                 $imagePATH = $imageINFO['path'];
                 echo "<div>"; 
-                echo "<img src='$imagePATH' witdh='200' height='200'>";
+                echo "<img src='$imagePATH' witdh='200' height='200'>"; // Vi viser billedet i 200x200px. 
                 echo "</div>";     
             }
             echo "</div>";
         }
 
-        echo "<address class='author'>Af ";
+        echo "<address class='author'>Af "; 
         echo "<a rel='author' href='$url'>";
         echo htmlspecialchars ($userID);
         echo "</a>";
-        // Rediger indlæg modal
+        echo "</address>";
+        echo "</div>";
+
+        // Modal knapper div 
+        echo"<div class='modal-div'>"; 
+        //Tilføj kommentar modal 
+        if (!empty($_SESSION['user'])) { // Modal findes kun, hvis brugeren er logget ind.
+            echo "<button type='button' class='btn btn-light btn-sm modal-button' data-bs-toggle='modal' data-bs-target='#modalForm'>";
+            echo 'Tilføj kommentar';
+            echo "</button>";
+        } else { // Ellers besked om at brugeren skal logge ind. 
+            echo "<p class='info-paragraph'>For at kommentere på indlægget, skal du være <a href='login.php'>logget ind.</a></p>";
+        }
+
+        // Rediger & slet indlæg modal
         if (strtolower($_SESSION['user']) == strtolower($userID)) {
-            echo "<button type='button' class='btn btn-light btn-sm modal-button edit-post-modal' data-bs-toggle='modal' data-bs-target='#modalEdit'>";
+            echo "<button type='button' class='btn btn-light btn-sm modal-button' data-bs-toggle='modal' data-bs-target='#modalEdit'>";
             echo 'Rediger indlæg';
             echo "</button>";
-            echo "</address>";
+            echo "<button type='button' class='btn btn-danger btn-sm modal-button' data-bs-toggle='modal' data-bs-target='#modalDelete'>";
+            echo 'Slet indlæg';
+            echo "</button>";
         }
-        echo "</div>";
+        echo "</div>"; //Modal knapper div-luk.
 
        // Pop-up Modal rediger indlæg
         echo "<div class='modal fade' id='modalEdit' tabindex='-1' aria-labelledby='exampleModalLabel' aria-hidden='true'>";
@@ -104,7 +121,7 @@ require_once '/home/mir/lib/db.php';
                         echo "</textarea>";
                     echo "</div>";
                     echo "<div class='modal-footer d-block'>";
-                        echo "<button type='submit' name='submitEditedPost' class='btn btn-dark float-end'>Submit</button>";
+                        echo "<button type='submit' name='submitEditedPost' class='btn btn-dark float-end'>Rediger</button>";
                     echo "</div>";
                 echo "</form>";
             echo "</div>";
@@ -112,22 +129,36 @@ require_once '/home/mir/lib/db.php';
         echo "</div>";
         echo "</div>";
 
-if (isset($_POST['submitEditedPost'])) {
+if (isset($_POST['submitEditedPost'])) { // Hvis bruger trykker submit: rediger indlæg.
     modify_post($pidInput, $_POST['newTitle'], $_POST['newContent']);
     header("Refresh:0"); //refresher siden så indlægget er opdateret
 }
-        
-    
+         // Pop-up Modal SLET indlæg
+         echo "<div class='modal fade' id='modalDelete' tabindex='-1' aria-labelledby='exampleModalLabel' aria-hidden='true'>";
+         echo "<div class='modal-dialog'>";
+         echo "<div class='modal-content'>";
+             echo "<div class='modal-header'>";
+                 echo "<h5 class='modal-title' id='exampleModalLabel'>Slet indlæg</h5>";
+                 echo "<button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>";
+             echo "</div>";
+             echo "<div class='modal-body'>";
+                echo "<p>";
+                echo "Er du sikker på, at du vil slette dit indlæg?";
+                echo "</p>";
+                 echo "<form action='' method='post'>";
+                     echo "<div class='modal-footer d-block'>";
+                         echo "<button type='submit' name='submitDelete' class='btn btn-danger float-end'>Slet</button>";
+                     echo "</div>";
+                 echo "</form>";
+             echo "</div>";
+         echo "</div>";
+         echo "</div>";
+         echo "</div>";
 
+         if (isset($_POST['submitDelete'])) {
+            // Indsæt kode til at slette post. Funktion findes ikke i Mortens API. 
+         }
 
-        // Modal knap tilføj kommentar.
-        if (!empty($_SESSION['user'])) {
-            echo "<button type='button' class='btn btn-light mx-auto d-block modal-button' data-bs-toggle='modal' data-bs-target='#modalForm'>";
-            echo 'Tilføj kommentar';
-            echo "</button>";
-        } else {
-            echo "<p class='info-paragraph'>For at kommentere på indlægget, skal du være <a href='login.php'>logget ind.</a></p>";
-        }
 
        // Pop-up Modal tilføj kommentar. 
         echo "<div class='modal fade' id='modalForm' tabindex='-1' aria-labelledby='exampleModalLabel' aria-hidden='true'>";
@@ -143,7 +174,7 @@ if (isset($_POST['submitEditedPost'])) {
                         echo "<textarea id='comment' name='comment' rows='5' cols='45'></textarea>";
                     echo "</div>";
                     echo "<div class='modal-footer d-block'>";
-                        echo "<button type='submit' name='submit' class='btn btn-dark float-end'>Submit</button>";
+                        echo "<button type='submit' name='submit' class='btn btn-dark float-end'>Tilføj</button>";
                     echo "</div>";
                 echo "</form>";
             echo "</div>";
@@ -151,21 +182,29 @@ if (isset($_POST['submitEditedPost'])) {
     echo "</div>";
 echo "</div>";
 
-if (isset($_POST['submit'])) {
+if (isset($_POST['submit'])) { // Hvis brugeren trykker submit: tilføjes kommentar. 
     add_comment($_SESSION['user'], $pidInput, $_POST['comment']);
 
 }
-        $cidsForPost = get_cids_by_pid($pidInput);
+        $cidsForPost = get_cids_by_pid($pidInput); // Henter kommentarers ID's, for dette indlæg. 
         echo "<h3 class='comment-headline'>Kommentarer</h3>";
         
-        if (!empty($cidsForPost)) {
+        if (!empty($cidsForPost)) { // Hvis der findes kommentarer
             echo "<div class = 'comment-section'>";
-            foreach ($cidsForPost as $cids) {
+            foreach ($cidsForPost as $cids) { // Løber igennem alle kommentars ID's. 
                 echo "<div class='comment'>";
                 $commentINFO = get_comment($cids);
                 $uidFromComment = $commentINFO['uid'];
-                $url = 'titler.php?uid='. $uidFromComment;
+                $url = 'userSide.php?uid='. $uidFromComment;
                 echo "<div>";
+
+                // Tjekker om brugeren er forfatteren af kommentar eller indlæg,
+                // vi bruger strtolower da brugernavn ikke afhænger af store/små bogstaver.  
+                if (strtolower(($_SESSION['user']) == strtolower($uidFromComment)) or strtolower($_SESSION['user']) == strtolower($userID)) {
+                    $cidURL = 'deleteComment.php?cid='.$cids.'&pid='.$pidInput;
+                    echo "<a href='$cidURL'><button type='button' class='btn btn-light btn-sm dl-comment-button'>Slet</button></a>";
+
+                }
                 echo "<a href='$url'>$uidFromComment</a>";
                 echo ': '. $commentINFO['content'];
                 echo "</div>";

@@ -2,7 +2,7 @@
 require_once '/home/mir/lib/db.php'; // Kontakter database. 
 if (!empty($_SESSION['user'])) // Hvis brugeren allerede har en session, så log direkte ind. 
 {
-    header('Location:minSide.php'); // Brugeren bliver sendt direkte til ny side. 
+    header('Location:index.php'); // Brugeren bliver sendt til forside. 
     exit;
 }
 if (isset($_POST['submit'])) {
